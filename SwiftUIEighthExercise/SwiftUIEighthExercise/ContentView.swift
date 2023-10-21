@@ -25,6 +25,7 @@ struct StretchySlider: View {
     @State var height: CGFloat = 200
     @State var sliderHeight: CGFloat = 150
     @State var width: CGFloat = 100
+    @State var yOffset: CGFloat = 0
     
     private var startHeight: CGFloat = 200
     private var startWidth: CGFloat = 100
@@ -50,6 +51,7 @@ struct StretchySlider: View {
                                 if value.location.y < offset - startHeight {
                                     sliderHeight = startHeight + pow(abs(offset - startHeight - value.location.y), 7.0/10.0)
                                     width = startWidth - pow(abs(offset - startHeight - value.location.y), 1.0/2.0)
+                                    yOffset = -pow(abs(offset - startHeight - value.location.y), 7.0/10.0)
                                 }
                                 
                                 if value.location.y < offset,
@@ -57,12 +59,14 @@ struct StretchySlider: View {
                                 {
                                     sliderHeight = progress
                                     width = startWidth
+                                    yOffset = 0
                                 }
                                 
                                 if value.location.y >= offset {
                                     sliderHeight = 0
                                     height = startHeight + pow(abs(progress), 7.0/10.0)
                                     width = startWidth - pow(abs(progress), 1.0/2.0)
+                                    yOffset = pow(abs(progress), 7.0/10.0)
                                 }
                             })
                         
@@ -70,6 +74,7 @@ struct StretchySlider: View {
                                 withAnimation(.easeOut) {
                                     width = startWidth
                                     height = startHeight
+                                    yOffset = 0
                                     if value.location.y >= offset {
                                         sliderHeight = 0
                                     }
@@ -84,6 +89,7 @@ struct StretchySlider: View {
             .mask(
                 RoundedRectangle(cornerRadius: 20)
             )
+            .offset(y: yOffset)
             .position(x: 200, y: yPosition)
             .coordinateSpace(name: "screen")
             
